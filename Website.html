@@ -1,0 +1,728 @@
+<!DOCTYPE>
+  <html lang="de">
+  
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Partielle Integration</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+      
+      <style>
+        :root
+          {
+             --bg-main: #1a1612;
+             --bg-card: #231f1a;
+             --bg-card-hover: #2a2520;
+            
+            --text-primary: #e8dcc8;
+            --text-secondary: #a89880;
+            --text-accent: #c9a96e;
+            
+            --font-heading: 'Cormorant Garamond', serif;
+            --font-body: 'EB Garamond', serif;
+            --font-math: 'EB Garamond', serif;
+            
+            --border: #3d342a;
+            --border-accent: #c9a96e;
+            --text-correct: #8fbc8f;
+            --text-wrong: #c47a7a;
+          }
+          
+          *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+          
+          body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 18px;
+            line-height: 1.7;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+          }
+          
+          header {
+            text-align: center;
+            padding: 3rem 0 2rem;
+            border-bottom: 1px solid var(--border-accent);
+            margin-bottom: 3rem;
+          }
+          
+          .header-label {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            letter-spacing: 0.2rem;
+            text-transform: uppercase;
+            color: var(--text-accent);
+            margin-bottom: 1rem;
+          }
+          
+          h1{
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.1;
+            margin-bottom: 1rem;
+          }
+          
+          
+          .header-subtitle {
+            font-family: var(--font-heading);
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+          }
+          
+          h2 {
+              font-family: var(--font-heading);
+              font-size: 1.8rem;
+              font-weight: 400;
+              color: var(--text-accent);
+              margin-bottom: 1.5rem;
+              padding-left: 1rem;
+              border-left: 2px solid var(--border-accent);
+            }
+         
+          h3 {
+              font-family: var(--font-heading);
+              font-size: 1.3rem;
+              color: var(--text-primary);
+              margin-bottom: 0.8rem;
+            }
+         
+          .card {
+              background-color: var(--bg-card);
+              border: 1px solid var(--border);
+              border-radius: 4px;
+              padding: 1.5rem 2rem;
+              margin-bottom: 1.5rem;
+              transition: border-color 0.3s ease;
+            }
+         
+          .card-formula {
+              background-color: var(--bg-card);
+              border: 1px solid var(--border-accent);
+              border-radius: 4px;
+              padding: 2rem;
+              text-align: center;
+              margin-bottom: 2rem;
+            }
+            
+          .formula {
+              font-family: var(--font-body);
+              font-size: 1.4rem;
+              color: var(--text-accent);
+              font-style: italic;
+              line-height: 2;
+            }
+       
+          .image-container {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-accent);
+          }
+       
+          .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7) sepia(0.3);
+            transition: transform 0.5s ease;
+          }
+       
+          .image-container:hover img { transform: scale(1.03); }
+       
+          .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2.5rem 0;
+          }
+          
+          
+          footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-style: italic;
+          }
+          
+        .screen { display: none; }
+        .screen.active { display: block; }
+        
+        .progress-bar-wrapper {
+          background: var(--border);
+          border-radius: 99px;
+          height: 6px;
+          margin-bottom: 2rem;
+          overflow: hidden;
+        }
+     
+        .progress-bar-fill {
+          height: 100%;
+          background: var(--border-accent);
+          border-radius: 99px;
+          transition: width 0.4s ease;
+          width: 0%;
+        }
+        
+            .task-counter {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+ 
+    .task-question {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .task-hint {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+ 
+    .choice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+ 
+    .choice-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-accent);
+      margin-bottom: 0.6rem;
+      text-align: center;
+    }
+ 
+    .choice-btn {
+      display: block;
+      width: 100%;
+      padding: 0.9rem 0.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-style: italic;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+ 
+    .choice-btn:hover {
+      border-color: var(--border-accent);
+      background: var(--bg-card-hover);
+    }
+ 
+    .choice-btn.selected {
+      border-color: var(--border-accent);
+      background: var(--bg-card-hover);
+      color: var(--text-accent);
+    }
+ 
+    .choice-btn.correct {
+      border-color: var(--text-correct);
+      color: var(--text-correct);
+    }
+ 
+
+    .choice-btn.wrong {
+      border-color: var(--text-wrong);
+      color: var(--text-wrong);
+    }
+    .feedback {
+      display: none; 
+      padding: 1.2rem 1.5rem;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+ 
+    .feedback.correct {
+      background: rgba(143, 188, 143, 0.1);
+      border: 1px solid var(--text-correct);
+      color: var(--text-correct);
+    }
+ 
+    .feedback.wrong {
+      background: rgba(196, 122, 122, 0.1);
+      border: 1px solid var(--text-wrong);
+      color: var(--text-wrong);
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      background: transparent;
+      border: 1px solid var(--border-accent);
+      border-radius: 4px;
+      color: var(--text-accent);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+ 
+    .btn:hover { background: var(--bg-card-hover); }
+ 
+   
+    .btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+ 
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+ 
+    .stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+ 
+    .stat-number {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 600;
+      color: var(--text-accent);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+ 
+    .stat-number.good { color: var(--text-correct); }
+    .stat-number.bad  { color: var(--text-wrong); }
+ 
+    
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+ 
+    .result-list {
+      list-style: none;
+      margin: 1.5rem 0;
+    }
+ 
+    .result-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 1rem;
+    }
+ 
+    .result-list li:last-child { border-bottom: none; }
+ 
+    .result-icon {
+      font-style: normal;
+      font-size: 1.1rem;
+    }
+ 
+    .result-icon.ok  { color: var(--text-correct); }
+    .result-icon.bad { color: var(--text-wrong); }
+ 
+    @media (max-width: 600px) {
+      h1 { font-size: 2.5rem; }
+      body { padding: 1rem; }
+      .choice-grid { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+ 
+<body>
+ 
+  <header>
+    <p class="header-label">Mathematik &middot; Analysis</p>
+    <h1>Partielle Integration</h1>
+    <p class="header-subtitle">Eine Methode zur Berechnung von Integralen</p>
+  </header>
+ 
+  <div id="screen-theory" class="screen active">
+ 
+    <div class="image-container">
+      <img src="https://images.unsplash.com/photo-1728506972831-193841eb2961?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=800" alt="Bücherregal">
+    </div>
+ 
+    <section>
+      <h2>Die Formel</h2>
+      <div class="card-formula">
+        <p class="formula">∫ u · v′ dx = u · v − ∫ u′ · v dx</p>
+      </div>
+      <div class="card">
+        <h3>Merkregel: LIATE</h3>
+        <p>Wähle <em>u</em> nach dieser Reihenfolge — was oben steht hat Vorrang:</p>
+        <p style="margin-top:0.8rem; font-style:italic; color: var(--text-accent);">
+          L ogarithmus &nbsp;·&nbsp; I nvers-trigonom. &nbsp;·&nbsp; A lgebraisch &nbsp;·&nbsp; T rigonom. &nbsp;·&nbsp; E xponential
+        </p>
+      </div>
+    </section>
+ 
+    <hr class="divider">
+ 
+    <section>
+      <h2>Aufgaben</h2>
+      <p style="margin-bottom:1.5rem; color: var(--text-secondary);">
+        Wähle bei jeder Aufgabe die richtige Belegung für <em>u</em> und <em>v′</em>.
+        Am Ende siehst du deine persönliche Auswertung.
+      </p>
+     
+      <button class="btn" onclick="startGame()">Aufgaben starten →</button>
+    </section>
+ 
+  </div>
+ 
+
+  <div id="screen-game" class="screen">
+ 
+  
+    <div class="progress-bar-wrapper">
+      <div class="progress-bar-fill" id="progress-bar"></div>
+    </div>
+ 
+    <p class="task-counter" id="task-counter">Aufgabe 1 von 5</p>
+ 
+    
+    <p class="task-question" id="task-question"></p>
+    <p class="task-hint" id="task-hint"></p>
+ 
+    
+    <div class="choice-grid">
+      
+      <div>
+        <p class="choice-label">Wähle u</p>
+        
+        <div id="u-options"></div>
+      </div>
+   
+      <div>
+        <p class="choice-label">Wähle v′</p>
+        <div id="v-options"></div>
+      </div>
+    </div>
+ 
+  
+    <div class="feedback" id="feedback"></div>
+ 
+    <button class="btn" id="btn-check" onclick="checkAnswer()" disabled>Prüfen</button>
+    <button class="btn" id="btn-next"  onclick="nextTask()"  style="display:none; margin-left:1rem;">Weiter →</button>
+ 
+  </div>
+ 
+ 
+
+  <div id="screen-stats" class="screen">
+ 
+    <section>
+      <h2>Deine Auswertung</h2>
+ 
+     
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-number good" id="stat-correct">0</div>
+          <div class="stat-label">Richtig</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number bad" id="stat-wrong">0</div>
+          <div class="stat-label">Falsch</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" id="stat-percent">0%</div>
+          <div class="stat-label">Trefferquote</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" id="stat-total">0</div>
+          <div class="stat-label">Aufgaben gesamt</div>
+        </div>
+      </div>
+ 
+      
+      <div class="card">
+        <h3>Aufgaben im Detail</h3>
+        <ul class="result-list" id="result-list"></ul>
+      </div>
+ 
+      
+      <button class="btn" onclick="restartGame()">Nochmal spielen ↺</button>
+    </section>
+ 
+  </div>
+ 
+ 
+  <footer>
+    <p>GFS Mathematik &middot; Partielle Integration</p>
+  </footer>
+  <script>
+ 
+  
+    const aufgaben = [
+      {
+        integral:  "∫ x · eˣ dx",
+        hint:      "Tipp: Was steht in der LIATE-Regel weiter vorne?",
+        u:         ["x", "eˣ", "1", "xeˣ"],
+        v:         ["eˣ", "x", "eˣ + 1", "ln(x)"],
+        correctU:  "x",
+        correctV:  "eˣ",
+        feedback:  "Richtig! x ist algebraisch (A), eˣ ist exponential (E) — also wird x zu u. Ergebnis: eˣ(x − 1) + C"
+      },
+      {
+        integral:  "∫ x · cos(x) dx",
+        hint:      "Tipp: Algebraisch kommt vor Trigonometrisch.",
+        u:         ["cos(x)", "x", "sin(x)", "x²"],
+        v:         ["sin(x)", "cos(x)", "x", "−sin(x)"],
+        correctU:  "x",
+        correctV:  "cos(x)",
+        feedback:  "Richtig! x ist algebraisch (A), cos(x) ist trigonometrisch (T). Ergebnis: x·sin(x) + cos(x) + C"
+      },
+      {
+        integral:  "∫ ln(x) dx",
+        hint:      "Tipp: ln(x) steht ganz vorne in LIATE. Und v′ = 1 ist ein erlaubter Trick!",
+        u:         ["ln(x)", "1/x", "x", "1"],
+        v:         ["1", "ln(x)", "x²", "1/x"],
+        correctU:  "ln(x)",
+        correctV:  "1",
+        feedback:  "Richtig! Der Trick: v′ = 1 setzen, damit ln(x) durch Ableiten verschwindet. Ergebnis: x·ln(x) − x + C"
+      },
+      {
+        integral:  "∫ x² · sin(x) dx",
+        hint:      "Tipp: Algebraisch kommt vor Trigonometrisch — auch bei x².",
+        u:         ["sin(x)", "x²", "cos(x)", "2x"],
+        v:         ["−cos(x)", "sin(x)", "x²", "cos(x)"],
+        correctU:  "x²",
+        correctV:  "sin(x)",
+        feedback:  "Richtig! x² ist algebraisch, sin(x) trigonometrisch. Hier braucht man zweimal partielle Integration."
+      },
+      {
+        integral:  "∫ x · ln(x) dx",
+        hint:      "Tipp: Logarithmus steht in LIATE ganz vorne — also wird ln(x) zu u.",
+        u:         ["x", "ln(x)", "1/x", "x · ln(x)"],
+        v:         ["x", "ln(x)", "x²/2", "1/x"],
+        correctU:  "ln(x)",
+        correctV:  "x",
+        feedback:  "Richtig! ln(x) ist Logarithmus (L), x ist algebraisch (A). Ergebnis: x²/2 · ln(x) − x²/4 + C"
+      }
+    ];
+ 
+    let aktuelleAufgabe = 0;   
+    let gewaehlteU      = null; 
+    let gewaehlteV      = null; 
+    let ergebnisse      = [];   
+ 
+    function zeigeBildschirm(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+ 
+    function startGame() {
+      aktuelleAufgabe = 0;
+      ergebnisse      = [];
+      zeigeBildschirm('screen-game');
+      ladeAufgabe(0);
+    }
+ 
+    
+    function ladeAufgabe(i) {
+      const aufgabe = aufgaben[i];
+      gewaehlteU = null;
+      gewaehlteV = null;
+ 
+      
+      const prozent = (i / aufgaben.length) * 100;
+      document.getElementById('progress-bar').style.width = prozent + '%';
+ 
+      
+      document.getElementById('task-counter').textContent =
+        'Aufgabe ' + (i + 1) + ' von ' + aufgaben.length;
+ 
+     
+      document.getElementById('task-question').textContent = aufgabe.integral;
+      document.getElementById('task-hint').textContent     = aufgabe.hint;
+ 
+      
+      const fb = document.getElementById('feedback');
+      fb.style.display = 'none';
+      fb.className = 'feedback';
+ 
+      
+      document.getElementById('btn-check').disabled    = true;
+      document.getElementById('btn-check').style.display = 'inline-block';
+      document.getElementById('btn-next').style.display  = 'none';
+ 
+  
+      const uContainer = document.getElementById('u-options');
+      uContainer.innerHTML = ''; 
+      aufgabe.u.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className   = 'choice-btn';
+        btn.textContent = option;
+        btn.onclick = () => waehleOption('u', option, btn);
+        uContainer.appendChild(btn);
+      });
+
+      const vContainer = document.getElementById('v-options');
+      vContainer.innerHTML = '';
+      aufgabe.v.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className   = 'choice-btn';
+        btn.textContent = option;
+        btn.onclick = () => waehleOption('v', option, btn);
+        vContainer.appendChild(btn);
+      });
+    }
+ 
+    function waehleOption(typ, wert, btn) {
+      if (typ === 'u') {
+        
+        document.querySelectorAll('#u-options .choice-btn')
+          .forEach(b => b.classList.remove('selected'));
+        gewaehlteU = wert;
+      } else {
+        document.querySelectorAll('#v-options .choice-btn')
+          .forEach(b => b.classList.remove('selected'));
+        gewaehlteV = wert;
+      }
+      
+      btn.classList.add('selected');
+ 
+      if (gewaehlteU && gewaehlteV) {
+        document.getElementById('btn-check').disabled = false;
+      }
+    }
+ 
+   
+    function checkAnswer() {
+      const aufgabe = aufgaben[aktuelleAufgabe];
+      const richtig = (gewaehlteU === aufgabe.correctU) &&
+                      (gewaehlteV === aufgabe.correctV);
+ 
+      
+      ergebnisse.push(richtig);
+ 
+      
+      document.querySelectorAll('#u-options .choice-btn').forEach(btn => {
+        if (btn.textContent === aufgabe.correctU) {
+          btn.classList.add('correct'); 
+        } else if (btn.classList.contains('selected')) {
+          btn.classList.add('wrong');  
+        }
+        btn.onclick = null; 
+      });
+      
+      document.querySelectorAll('#v-options .choice-btn').forEach(btn => {
+        if (btn.textContent === aufgabe.correctV) {
+          btn.classList.add('correct');
+        } else if (btn.classList.contains('selected')) {
+          btn.classList.add('wrong');
+        }
+        btn.onclick = null;
+      });
+ 
+      
+      const fb = document.getElementById('feedback');
+      fb.style.display = 'block';
+      if (richtig) {
+        fb.className   = 'feedback correct';
+        fb.textContent = '✓ ' + aufgabe.feedback;
+      } else {
+        fb.className   = 'feedback wrong';
+        fb.textContent = '✗ Nicht ganz. ' + aufgabe.feedback;
+      }
+ 
+      document.getElementById('btn-check').style.display = 'none';
+ 
+      const btnNext = document.getElementById('btn-next');
+      btnNext.style.display = 'inline-block';
+      if (aktuelleAufgabe === aufgaben.length - 1) {
+        btnNext.textContent = 'Auswertung →';
+      } else {
+        btnNext.textContent = 'Weiter →';
+      }
+    }
+ 
+    
+    function nextTask() {
+      aktuelleAufgabe++;
+      if (aktuelleAufgabe < aufgaben.length) {
+        ladeAufgabe(aktuelleAufgabe);
+      } else {
+        zeigeStatistik();
+      }
+    }
+ 
+    function zeigeStatistik() {
+      const richtigAnzahl = ergebnisse.filter(e => e).length;
+      const falschAnzahl  = ergebnisse.filter(e => !e).length;
+      const prozent       = Math.round((richtigAnzahl / ergebnisse.length) * 100);
+ 
+      
+      document.getElementById('stat-correct').textContent = richtigAnzahl;
+      document.getElementById('stat-wrong').textContent   = falschAnzahl;
+      document.getElementById('stat-percent').textContent = prozent + '%';
+      document.getElementById('stat-total').textContent   = ergebnisse.length;
+ 
+      
+      const pEl = document.getElementById('stat-percent');
+      pEl.className = 'stat-number';
+      if (prozent >= 80)      pEl.classList.add('good');
+      else if (prozent < 50)  pEl.classList.add('bad');
+ 
+      
+      const liste = document.getElementById('result-list');
+      liste.innerHTML = '';
+      ergebnisse.forEach((richtig, index) => {
+        const li = document.createElement('li');
+        li.innerHTML =
+          '<span>' + aufgaben[index].integral + '</span>' +
+          '<span class="result-icon ' + (richtig ? 'ok' : 'bad') + '">' +
+          (richtig ? '✓' : '✗') + '</span>';
+        liste.appendChild(li);
+      });
+ 
+      
+      document.getElementById('progress-bar').style.width = '100%';
+ 
+      zeigeBildschirm('screen-stats');
+    }
+ 
+    function restartGame() {
+      zeigeBildschirm('screen-theory');
+    }
+ 
+  </script>
+ 
+</body>
+</html>
+
