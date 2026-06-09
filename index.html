@@ -365,7 +365,7 @@
 <body>
  
   <header>
-    <p class="header-label">Mathematik &middot; Analysis</p>
+    <p class="header-label">Mathematik &middot; Integration</p>
     <h1>Partielle Integration</h1>
     <p class="header-subtitle">Eine Methode zur Berechnung von Integralen</p>
   </header>
@@ -396,7 +396,7 @@
       <h2>Aufgaben</h2>
       <p style="margin-bottom:1.5rem; color: var(--text-secondary);">
         Wähle bei jeder Aufgabe die richtige Belegung für <em>u</em> und <em>v′</em>.
-        Am Ende siehst du deine persönliche Auswertung.
+        Denk dabei immer an die LIATE-Merkregel
       </p>
      
       <button class="btn" onclick="startGame()">Aufgaben starten →</button>
@@ -490,7 +490,7 @@
     const aufgaben = [
       {
         integral:  "∫ x · eˣ dx",
-        hint:      "Tipp: Was steht in der LIATE-Regel weiter vorne?",
+        hint:      "Tipp: Was steht in der LIATE-Merkregel weiter vorne?",
         u:         ["x", "eˣ", "1", "xeˣ"],
         v:         ["eˣ", "x", "eˣ + 1", "ln(x)"],
         correctU:  "x",
@@ -499,7 +499,7 @@
       },
       {
         integral:  "∫ x · cos(x) dx",
-        hint:      "Tipp: Schau dir die LIATE-Regel nochmal an.",
+        hint:      "Tipp: Schau dir die LIATE-Merkregel nochmal an.",
         u:         ["cos(x)", "x", "sin(x)", "x²"],
         v:         ["sin(x)", "cos(x)", "x", "−sin(x)"],
         correctU:  "x",
@@ -508,7 +508,7 @@
       },
       {
         integral:  "∫ ln(x) dx",
-        hint:      "Tipp: LIATE-Merkrege und enk dran das man manche Zahlen beim Multiplizieren nicht hinschreiben muss.",
+        hint:      "Tipp: LIATE-Merkregel und denk dran das man manche Zahlen beim Multiplizieren nicht hinschreiben muss.",
         u:         ["ln(x)", "1/x", "x", "1"],
         v:         ["1", "ln(x)", "x²", "1/x"],
         correctU:  "ln(x)",
