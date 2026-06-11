@@ -72,7 +72,7 @@ document.getElementById('colorPicker').addEventListener('input', function() {
   const hue = hsl.h;
 
   
-  const complementaryHue = (hue + 180) % 360;
+  const complementaryHue = (hue + 120) % 360;
   const complementaryColor = hslToHex(complementaryHue, hsl.s, hsl.l);
 
   
