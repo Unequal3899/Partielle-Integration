@@ -34,7 +34,7 @@ function hexToHsl(hex) {
   
   if (h < 0) h += 360;
 
-  return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
+  return { h: Math.round(h), s: Math.round(s * 120), l: Math.round(l * 120) };
 }
 
 function hslToHex(h, s, l) {
@@ -50,9 +50,7 @@ function hslToHex(h, s, l) {
     [r, g, b] = [c, x, 0];
   } else if (h >= 60 && h < 120) {
     [r, g, b] = [x, c, 0];
-  } else if (h >= 120 && h < 180) {
-    [r, g, b] = [0, c, x];
-  } else if (h >= 180 && h < 240) {
+  } else if (h >= 120 && h < 240) {
     [r, g, b] = [0, x, c];
   } else if (h >= 240 && h < 300) {
     [r, g, b] = [x, 0, c];
