@@ -501,23 +501,23 @@
     <p>GFS Mathematik &middot; Partielle Integration</p>
   </footer>
   <script>
-   // Hilfsfunktionen: Hex ↔ HSL
+   
 function hexToHsl(hex) {
-  // Entferne das #, falls vorhanden
+  
   hex = hex.replace('#', '');
-  // Konvertiere Hex zu RGB
+  
   let r = parseInt(hex.substring(0, 2), 16) / 255;
   let g = parseInt(hex.substring(2, 4), 16) / 255;
   let b = parseInt(hex.substring(4, 6), 16) / 255;
 
-  // Finde Max und Min
+  
   let max = Math.max(r, g, b);
   let min = Math.min(r, g, b);
   let delta = max - min;
 
   let h, s, l = (max + min) / 2;
 
-  // Berechne Hue
+  
   if (delta === 0) {
     h = 0;
   } else if (max === r) {
@@ -528,14 +528,14 @@ function hexToHsl(hex) {
     h = 60 * (((r - g) / delta) + 4);
   }
 
-  // Berechne Sättigung
+  
   if (delta === 0) {
     s = 0;
   } else {
     s = delta / (1 - Math.abs(2 * l - 1));
   }
 
-  // Normalisiere Hue
+  
   if (h < 0) h += 360;
 
   return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
