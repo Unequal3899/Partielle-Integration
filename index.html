@@ -501,7 +501,96 @@
     <p>GFS Mathematik &middot; Partielle Integration</p>
   </footer>
   <script>
- 
+   // Hilfsfunktionen: Hex ↔ HSL
+function hexToHsl(hex) {
+  // Entferne das #, falls vorhanden
+  hex = hex.replace('#', '');
+  // Konvertiere Hex zu RGB
+  let r = parseInt(hex.substring(0, 2), 16) / 255;
+  let g = parseInt(hex.substring(2, 4), 16) / 255;
+  let b = parseInt(hex.substring(4, 6), 16) / 255;
+
+  // Finde Max und Min
+  let max = Math.max(r, g, b);
+  let min = Math.min(r, g, b);
+  let delta = max - min;
+
+  let h, s, l = (max + min) / 2;
+
+  // Berechne Hue
+  if (delta === 0) {
+    h = 0;
+  } else if (max === r) {
+    h = 60 * (((g - b) / delta) % 6);
+  } else if (max === g) {
+    h = 60 * (((b - r) / delta) + 2);
+  } else {
+    h = 60 * (((r - g) / delta) + 4);
+  }
+
+  // Berechne Sättigung
+  if (delta === 0) {
+    s = 0;
+  } else {
+    s = delta / (1 - Math.abs(2 * l - 1));
+  }
+
+  // Normalisiere Hue
+  if (h < 0) h += 360;
+
+  return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
+}
+
+function hslToHex(h, s, l) {
+  s /= 100;
+  l /= 100;
+
+  let c = (1 - Math.abs(2 * l - 1)) * s;
+  let x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  let m = l - c / 2;
+
+  let r, g, b;
+  if (h >= 0 && h < 60) {
+    [r, g, b] = [c, x, 0];
+  } else if (h >= 60 && h < 120) {
+    [r, g, b] = [x, c, 0];
+  } else if (h >= 120 && h < 180) {
+    [r, g, b] = [0, c, x];
+  } else if (h >= 180 && h < 240) {
+    [r, g, b] = [0, x, c];
+  } else if (h >= 240 && h < 300) {
+    [r, g, b] = [x, 0, c];
+  } else {
+    [r, g, b] = [c, 0, x];
+  }
+
+  r = Math.round((r + m) * 255);
+  g = Math.round((g + m) * 255);
+  b = Math.round((b + m) * 255);
+
+  return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+
+// Farbring-Event: Farben dynamisch anpassen
+document.getElementById('colorPicker').addEventListener('input', function() {
+  const mainColor = this.value;
+  const hsl = hexToHsl(mainColor);
+  const hue = hsl.h;
+
+  // Berechne Komplementärfarbe (Hue + 180°)
+  const complementaryHue = (hue + 180) % 360;
+  const complementaryColor = hslToHex(complementaryHue, hsl.s, hsl.l);
+
+  // Berechne analoge Farbe (Hue + 30°)
+  const analogousHue = (hue + 30) % 360;
+  const analogousColor = hslToHex(analogousHue, hsl.s, hsl.l);
+
+  // Aktualisiere CSS-Variablen
+  document.documentElement.style.setProperty('--bg-main', mainColor);
+  document.documentElement.style.setProperty('--bg-card', complementaryColor);
+  document.documentElement.style.setProperty('--text-accent', analogousColor);
+  document.documentElement.style.setProperty('--border-accent', analogousColor);
+});
   
     const aufgaben = [
       {
