@@ -570,21 +570,21 @@ function hslToHex(h, s, l) {
   return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
 }
 
-// Farbring-Event: Farben dynamisch anpassen
+
 document.getElementById('colorPicker').addEventListener('input', function() {
   const mainColor = this.value;
   const hsl = hexToHsl(mainColor);
   const hue = hsl.h;
 
-  // Berechne Komplementärfarbe (Hue + 180°)
+  
   const complementaryHue = (hue + 180) % 360;
   const complementaryColor = hslToHex(complementaryHue, hsl.s, hsl.l);
 
-  // Berechne analoge Farbe (Hue + 30°)
+  
   const analogousHue = (hue + 30) % 360;
   const analogousColor = hslToHex(analogousHue, hsl.s, hsl.l);
 
-  // Aktualisiere CSS-Variablen
+  
   document.documentElement.style.setProperty('--bg-main', mainColor);
   document.documentElement.style.setProperty('--bg-card', complementaryColor);
   document.documentElement.style.setProperty('--text-accent', analogousColor);
